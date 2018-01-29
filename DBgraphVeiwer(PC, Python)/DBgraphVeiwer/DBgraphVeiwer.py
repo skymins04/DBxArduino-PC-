@@ -13,8 +13,7 @@ from PIL import Image, ImageTk
         2.dynamicGraph.php 파일이 이 뷰어의 옵션(TB,unit,height,min,addx,addy,showPoint,showValue)를 지원해야함
         3.반환된 그래프 이미지는 .png 포멧의 파일이어야함
         4.서버에 veiwTB.php라는 테이블 목록 반환 파일이 있어야함(,로 테이블명 구분)
-        5.arduino 라는 DB가 있어야 함
-        6.테이블 구조는 1.id, 2.time(timestamp), 3.그래프에 표시할 데이터들...
+        5.테이블 구조는 1.id, 2.time(timestamp), 3.그래프에 표시할 데이터들...
 """
 
 def main() :

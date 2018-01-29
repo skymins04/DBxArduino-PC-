@@ -120,7 +120,7 @@ def TBlist(ser) :
 
     Label(TB,text=ent1.get()+'의 테이블:').pack()
 
-    url = 'http://'+ser+'/veiwTB.php'
+    url = 'http://'+ser+'/DBxArduino/veiwTB.php'
     _list = urllib.request.urlopen(url)
     decodelist = str(_list.read().decode('utf-8'))
 
@@ -140,7 +140,7 @@ def veiwGraph(_ser,graph,unit,height,min,addx,addy,point,value) :
     veiwer.title('veiw Graph')
     veiwer.resizable(width=False, height=False)
 
-    url = 'http://'+_ser+'/dynamicGraph.php?TB='+graph+'&unit='+unit+'&height='+height+'&min='+min+'&addx='+addx+'&addy='+addy+'&showPoint='+point+'&showValue='+value
+    url = 'http://'+_ser+'/DBxArduino/dynamicGraph.php?TB='+graph+'&unit='+unit+'&height='+height+'&min='+min+'&addx='+addx+'&addy='+addy+'&showPoint='+point+'&showValue='+value
     img = loadGraph(url)
     imgTK = ImageTk.PhotoImage(img)
 

@@ -9,10 +9,10 @@ from PIL import Image, ImageTk
 
 """
     적용 조건:
-        1.서버에 dynamicGraph.php라는 그래프 이미지(.png) 반환 파일이 있어야함(GD 라이브러리)
-        2.dynamicGraph.php 파일이 이 뷰어의 옵션(TB,unit,height,min,addx,addy,showPoint,showValue)를 지원해야함
+        1.서버 홈디렉토리에 DBxArduino/dynamicGraph.php라는 그래프 이미지(.png) 반환 파일이 있어야함(GD 라이브러리)
+        2.DBxArduino/dynamicGraph.php 파일이 이 뷰어의 옵션(TB,unit,height,min,addx,addy,showPoint,showValue)를 지원해야함
         3.반환된 그래프 이미지는 .png 포멧의 파일이어야함
-        4.서버에 veiwTB.php라는 테이블 목록 반환 파일이 있어야함(,로 테이블명 구분)
+        4.서버 홈디렉토리에 DBxArduino/veiwTB.php라는 테이블 목록 반환 파일이 있어야함(,로 테이블명 구분)
         5.테이블 구조는 1.id, 2.time(timestamp), 3.그래프에 표시할 데이터들...
 """
 
@@ -147,9 +147,9 @@ def veiwGraph(_ser,graph,unit,height,min,addx,addy,point,value) :
     def saveGraph():
         now = time.localtime()
         filename = "%04d-%02d-%02d_%02d-%02d-%02d_%s_%s.png" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, _ser, graph)
-        if not os.path.exists('C:\\DBgraphVeiwer') :
-            os.makedirs('C:\\DBgraphVeiwer')
-        chdir('C:\\DBgraphVeiwer')
+        if not os.path.exists('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()) :
+            os.makedirs('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get())
+        chdir('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get())
         img.save(filename)
         chdir(homeroot)
 

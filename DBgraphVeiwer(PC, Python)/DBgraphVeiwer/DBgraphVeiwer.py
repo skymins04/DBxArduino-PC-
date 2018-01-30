@@ -18,7 +18,7 @@ from PIL import Image, ImageTk
 def main() :
     global homeroot
     homeroot = os.getcwd()
-    version = 'v.1.0.2.1'
+    version = 'v.1.0.2.2'
 
     win = Tk()
     win.iconbitmap('BetaMan.ico')
@@ -199,7 +199,7 @@ def veiwGraph(DBname,_ser,graph,unit,height,min,addx,addy,point,value) :
         if not os.path.exists('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+dbname.get()+'\\'+ent2.get()+'\\csv') :
             os.makedirs('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+dbname.get()+'\\'+ent2.get()+'\\csv')
         chdir('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+dbname.get()+'\\'+ent2.get()+'\\csv')
-        urllib.request.urlretrieve('http://192.168.0.39/DBxArduino/exportCSV.php?fname=test3&TB=temperature',filename)
+        urllib.request.urlretrieve('http://'+ent1.get()+'/DBxArduino/exportCSV.php?fname='+filename+'&TB='+ent2.get()+'&DB='+dbname.get(),filename)
         chdir(homeroot)
         msg.showinfo(title='.csv 파일로 저장',message=filename+' 를 저장했습니다 (위치: '+'C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+dbname.get()+'\\'+ent2.get()+'\\csv'+filename+')')
 

@@ -6,7 +6,6 @@ from os import chdir
 import sys, time
 import urllib.request
 from PIL import Image, ImageTk
-
 """
     적용 조건:
         1.서버 홈디렉토리에 DBxArduino/dynamicGraph.php라는 그래프 이미지(.png) 반환 파일이 있어야함(GD 라이브러리)
@@ -19,7 +18,7 @@ from PIL import Image, ImageTk
 def main() :
     global homeroot
     homeroot = os.getcwd()
-    version = 'v.1.0.1.2'
+    version = 'v.1.0.2'
 
     win = Tk()
     win.iconbitmap('BetaMan.ico')
@@ -147,16 +146,28 @@ def veiwGraph(_ser,graph,unit,height,min,addx,addy,point,value) :
     def saveGraph():
         now = time.localtime()
         filename = "%04d-%02d-%02d_%02d-%02d-%02d_%s_%s.png" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, _ser, graph)
-        if not os.path.exists('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()) :
-            os.makedirs('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get())
-        chdir('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get())
+        if not os.path.exists('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\graph') :
+            os.makedirs('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\graph')
+        chdir('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\graph')
         img.save(filename)
         chdir(homeroot)
+        msg.showinfo(title='이미지로 저장',message=filename+' 를 저장했습니다\n(위치: '+'C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\graph\\'+filename+')')
+
+    def saveCSV():
+        now = time.localtime()
+        filename = "%04d-%02d-%02d_%02d-%02d-%02d_%s_%s.csv" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, _ser, graph)
+        if not os.path.exists('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\csv') :
+            os.makedirs('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\csv')
+        chdir('C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\csv')
+        urllib.request.urlretrieve('http://192.168.0.39/DBxArduino/exportCSV.php?fname=test3&TB=temperature',filename)
+        chdir(homeroot)
+        msg.showinfo(title='.csv 파일로 저장',message=filename+' 를 저장했습니다 (위치: '+'C:\\DBgraphVeiwer\\'+ent1.get()+'\\'+ent2.get()+'\\csv\\'+filename+')')
 
     img_lbl = Label(veiwer,image=imgTK)
     img_lbl.image = imgTK
     img_lbl.pack()
-    Button(veiwer,text='그래프 이미지 저장',command=lambda:saveGraph()).pack(anchor=W)
+    Button(veiwer,text='이미지로 저장',command=lambda:saveGraph()).pack(side=LEFT)
+    Button(veiwer,text='.csv 파일로 저장',command=lambda:saveCSV()).pack(side=LEFT)
 
 #서버에서 그래프 이미지 불러오기
 def loadGraph(ser) :

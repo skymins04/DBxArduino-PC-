@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>How to use DBgraphVeiwer?</title>
+	<meta charset="UTF-8"/>
+	<link rel="icon" href="BetaMan.ico"/>
+
+	<style>
+		.strong {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<div class="Head">
+		<img src="logo.png" alt="DBgraphVeiwer's Logo" width=80px/>
+		<h1>DBgraphVeiwer 사용방법</h1>
+	</div>
+	<div class="Body">
+		<h2>서버 및 데이터 준비</h2>
+		<p>
+			<a href="https://github.com/skymins04/DBxArduino-server-">여기에 들어가서</a> 모두 다운로드 받은 뒤 dynamicGraph.php, exportCSV.php, veiwList.php를 서버 웹루트에 <span class="strong">DBxArduino</span>라는 이름의<br/>
+			폴더를 생성 후 생성한 폴더에 옳긴다. 그리고 옳긴 파일들 모두 열어 코드 맨위 <span class="strong">$db_conn = mysqli_connect('localhost',' ',' ',$DBname);</span> 부분을 각각 자신의 DB <span class="strong">서버주소, 사용자명, 비번</span>으로 수정한다.<br/>
+			그 후 tcpRceivData.py를 홈디렉토리로 옳긴 뒤 파일을 열어 마찬가지로 <span class="strong">mysql_conn = pymysql.connect ( host = ' 127.0.0.1 ' , user = ' ' , password = ' ' , db = ' ' , charset = ' utf8 ' )</span> 부분을 자신의 DB 서버의 유저명, 비번, DB명으로 수정한다.<br/>
+			그리고 6번째 줄에 host와 port를 수정한다(host는 서버 주소, port는 원하는 포트)
+		</p>
+		<p>
+			<a href="https://github.com/skymins04/DBxArduino-Arduino-">여기에 들어가서</a> 아두이노 소스를 다운받은 뒤 파일을 연다. 맨 위에 ssid와 pswd를 수정하여 와이파이를 연결하고 host와 port를 자신의 서버주소와 파이썬 tcp 서버 스크립트에 수정한 포트로 수정한다<br/>
+			센서 데이터를 불러오는 소스를 센서마다 다르니 그건 알아서 작성하고 서버로 그 데이터를 보낼때는 쉼표로 구분한 문자열로 보낸다. 64번 줄을 수정하면 된다.<br/>
+			아두이노에 소스를 업로드하기 전에 서버에 tcpRceivData.py를 실행하고 아두이노에 소스를 업로드한다. 업로드와 부팅이 끝나면 그때부터 서버에 데이터를 보네기 시작한다.
+		</p>
+		<p>
+			데이터 전송을 멈출때는 서버에 tcpRceivData.py를 먼저 종료하고 아두이노를 멈춘다.(DB에 쓰레기 값이 들어가지 않게하기 위함이다)
+		</p>
+		<h2>그래프 보기</h2>
+	</div>
+</body>
+</html>

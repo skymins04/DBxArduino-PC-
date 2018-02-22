@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter import messagebox as msg
-from tkinter import ttk
-from tkinter import font
+from tkinter import ttk, font
 import os
 from os import chdir
+from os.path import expanduser
+import subprocess
 import sys, time
 from io import BytesIO
 import urllib.request as urlreq
@@ -12,6 +13,9 @@ from PIL import Image, ImageTk
 def main() :
     global homedir
     homedir = os.getcwd()
+    global userHome
+    userHome = expanduser('~')
+
     version = 'v.1.0.3'
 
     """ 메인창 설정 """
@@ -19,14 +23,15 @@ def main() :
     ttk.Style().theme_use('vista')
     mainW.iconbitmap('BetaMan.ico')
     mainW.title('DB graph Veiwer')
-    mainW.geometry('380x480')
+    mainW.geometry('380x500')
     mainW.resizable(width=True,height=False)
     
     """ 타이틀 & 로고 """
-    titleFont = font.Font(mainW,size=30,family='NotoSansCJKkr-Thin')
-    title = Label(mainW,text='DB graph Veiwer',height=1) #타이틀
+    titleFont = font.Font(mainW,size=25,family='malgun')
+    title = Label(mainW,text='DB graph Veiwer',height=2) #타이틀
     title['font']=titleFont
     title.pack()
+
     logo = PhotoImage(file='logo.png') #로고 이미지
     Label(mainW,image=logo,height=200).pack()
 
@@ -40,6 +45,20 @@ def main() :
     infoBarF = ttk.Frame(mainW); infoBarF.pack(anchor=E);
 
     """ UI 정의 """
+    ##상단 메뉴
+    topMenu = Menu(mainW)
+    mainW.config(menu=topMenu)
+    
+    file = Menu(topMenu)
+    
+    file.add_command(label='Open CSV')
+    topMenu.add_cascade(label='File',menu=file)
+
+    help = Menu(topMenu)
+
+    help.add_command(label='사용방법',command=lambda:os.system('help.html'))
+    topMenu.add_cascade(label='Help',menu=help)
+
     ##필수 메뉴
     Label(widgetF,text='서버주소: ').grid(row=0,column=0,sticky=W)
     global serAddrEnt; serAddrEnt = ttk.Entry(widgetF,width=30); serAddrEnt.grid(row=0,column=1,sticky=W);
@@ -157,35 +176,47 @@ def veiwGraph(_ser,DBname,TBname,unit,height,min,addx,addy,point,value) :
     img = loadGraph(url)
     imgTK = ImageTk.PhotoImage(img)
 
+    img_lbl = Label(veiwer,image=imgTK)
+    img_lbl.image = imgTK
+    img_lbl.pack()
+
+    """
+    이미지 || csv file 저장
+    """
+    savePath = userHome+'\\Documents\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname
+
     def saveGraph():
         now = time.localtime()
         filename = "%04d-%02d-%02d_%02d-%02d-%02d_%s_%s.png" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, _ser, TBname)
-        if not os.path.exists('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\graph') :
-            os.makedirs('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\graph')
-        chdir('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\graph')
+        
+        if not os.path.exists(savePath+'\\graph') :
+            os.makedirs(savePath+'\\graph')
+        
+        chdir(savePath+'\\graph')
         img.save(filename)
         chdir(homedir)
-        msg.showinfo(title='이미지로 저장',message=filename+' 를 저장했습니다\n(위치: '+'C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\graph'+filename+')')
+
+        msg.showinfo(title='이미지로 저장',message=filename+' 를 저장했습니다\n(위치: '+savePath+'\\graph\\'+filename+')')
 
     def saveCSV():
         now = time.localtime()
         filename = "%04d-%02d-%02d_%02d-%02d-%02d_%s_%s.csv" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, _ser, TBname)
-        if not os.path.exists('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\csv') :
-            os.makedirs('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\csv')
-        chdir('C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\csv')
+        
+        if not os.path.exists(savePath+'\\csv') :
+            os.makedirs(savePath+'\\csv')
+        
+        chdir(savePath+'\\csv')
         urlreq.urlretrieve('http://'+_ser+'/DBxArduino/exportCSV.php?fname='+filename+'&TB='+TBname+'&DB='+DBname,filename)
         chdir(homedir)
-        msg.showinfo(title='.csv 파일로 저장',message=filename+' 를 저장했습니다 (위치: '+'C:\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\csv'+filename+')')
+        
+        msg.showinfo(title='.csv 파일로 저장',message=filename+' 를 저장했습니다 (위치: '+userHome+'\\Documents\\DBgraphVeiwer\\'+_ser+'\\'+DBname+'\\'+TBname+'\\csv\\'+filename+')')
 
-    img_lbl = Label(veiwer,image=imgTK)
-    img_lbl.image = imgTK
-    img_lbl.pack()
     ttk.Button(veiwer,text='이미지로 저장',command=lambda:saveGraph()).pack(side=LEFT)
     ttk.Button(veiwer,text='.csv 파일로 저장',command=lambda:saveCSV()).pack(side=LEFT)
 
 #서버에서 그래프 이미지 불러오기
-def loadGraph(ser) :
-    u = urlreq.urlopen(ser)
+def loadGraph(url) :
+    u = urlreq.urlopen(url)
     _raw = u.read()
     u.close()
     _im = Image.open(BytesIO(_raw))

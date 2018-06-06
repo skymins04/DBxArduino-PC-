@@ -7,6 +7,10 @@ DB x Arduino 그래프 뷰어 v.1.0.3
 
 # How to Use it?
 ```sh
+pip install pil
+-pil을 설치해
+```
+```sh
 1. DBgraphVeiwer를 다운받는다
 2. https://github.com/skymins04/DBxArduino-server- 에서 dynamicGraph.php, exportCSV.php, veiwList.php 를 다운받아
   자신의 서버에 (/var/www/html/DBxArduino) 풀어놓는다.
